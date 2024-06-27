@@ -2,8 +2,7 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:animated_tree_view/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(
-    BuildContext, ITreeNode<Data>);
+typedef ExpansionIndicatorBuilder<Data> = ExpansionIndicator Function(BuildContext, ITreeNode<Data>);
 
 class PositionedExpansionIndicator extends StatelessWidget {
   final ExpansionIndicator expansionIndicator;
@@ -61,8 +60,7 @@ abstract class ExpansionIndicator extends StatefulWidget {
   });
 }
 
-abstract class ExpansionIndicatorState<T extends ExpansionIndicator>
-    extends State<T> with TickerProviderStateMixin {
+abstract class ExpansionIndicatorState<T extends ExpansionIndicator> extends State<T> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: animationDuration,
     vsync: this,
@@ -110,12 +108,14 @@ class _NoExpansionIndicatorState extends State<NoExpansionIndicator> {
 class ChevronIndicator extends ExpansionIndicator {
   final Tween<double> tween;
   final IconData icon;
+  final double? size;
 
   ChevronIndicator._({
     super.key,
     required super.tree,
     required this.tween,
     required this.icon,
+    this.size,
     super.alignment,
     super.padding,
     super.curve,
@@ -136,6 +136,7 @@ class ChevronIndicator extends ExpansionIndicator {
     Curve curve = Curves.linearToEaseOut,
     Color? color,
     IconData? icon,
+    double? size,
   }) =>
       ChevronIndicator._(
         key: key,
@@ -146,6 +147,7 @@ class ChevronIndicator extends ExpansionIndicator {
         padding: padding,
         curve: curve,
         color: color,
+        size: size,
       );
 
   /// Uses a chevron to indicate the expansion state.
@@ -162,6 +164,7 @@ class ChevronIndicator extends ExpansionIndicator {
     Curve curve = Curves.linearToEaseOut,
     Color? color,
     IconData? icon,
+    double? size,
   }) =>
       ChevronIndicator._(
         key: key,
@@ -172,6 +175,7 @@ class ChevronIndicator extends ExpansionIndicator {
         padding: padding,
         curve: curve,
         color: color,
+        size: size,
       );
 
   @override
@@ -183,7 +187,7 @@ class _RotatedIndicatorState extends ExpansionIndicatorState<ChevronIndicator> {
   Widget build(BuildContext context) {
     return RotationTransition(
       turns: widget.tween.animate(_controller),
-      child: Icon(widget.icon, color: widget.color),
+      child: Icon(widget.icon, color: widget.color, size: widget.size),
     );
   }
 }
@@ -214,8 +218,7 @@ class PlusMinusIndicator extends ExpansionIndicator {
   State<StatefulWidget> createState() => _PlusMinusIndicatorState();
 }
 
-class _PlusMinusIndicatorState
-    extends ExpansionIndicatorState<PlusMinusIndicator> {
+class _PlusMinusIndicatorState extends ExpansionIndicatorState<PlusMinusIndicator> {
   late final tween = Tween<double>(begin: 0, end: 0.25);
 
   @override
@@ -227,9 +230,7 @@ class _PlusMinusIndicatorState
         children: [
           RotationTransition(
             turns: tween.animate(_controller),
-            child: RotatedBox(
-                quarterTurns: 1,
-                child: Icon(Icons.remove, color: widget.color)),
+            child: RotatedBox(quarterTurns: 1, child: Icon(Icons.remove, color: widget.color)),
           ),
           Icon(Icons.remove, color: widget.color),
         ],
